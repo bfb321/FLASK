@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  </head>
+  <body>
+    <div class="dashboard-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">BFB321</div>
+          <div class="brand-copy">
+            <span class="brand-name">BFB321</span>
+            <small>Operations</small>
+          </div>
+        </div>
+
+        <nav class="nav" aria-label="Main navigation">
+          <a href="/" class="active">Overview</a>
+          <a href="/project">Projects</a>
+          <a href="/client">Clients</a>
+          <a href="#">Reports</a>
+        </nav>
+
+        <div class="topbar-actions">
+          <button class="ghost-btn">Notifications</button>
+          <button class="primary-btn">New report</button>
+        </div>
+      </header>
+
+      <main class="main-grid">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </body>
+</html>

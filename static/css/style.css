@@ -256,8 +256,17 @@ h1 {
 }
 
 .content-panel,
-.chart-panel {
+.chart-panel,
+.product-panel {
   padding: 24px 26px;
+}
+
+.product-panel {
+  grid-column: 1 / -1;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: 0 10px 30px rgba(18, 24, 39, 0.03);
 }
 
 .section-title {
@@ -375,6 +384,65 @@ h1 {
 .bar-group label {
   color: var(--muted);
   font-size: 0.8rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--panel-alt);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.product-table th,
+.product-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(22, 32, 51, 0.08);
+}
+
+.product-table thead th {
+  background: rgba(69, 99, 235, 0.06);
+  color: var(--muted);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.product-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.product-table tbody tr:hover {
+  background: rgba(69, 99, 235, 0.03);
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 7px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.status-badge.success {
+  background: rgba(46, 197, 163, 0.12);
+  color: #0d8f74;
+}
+
+.status-badge.warning {
+  background: rgba(255, 182, 72, 0.15);
+  color: #b7791f;
+}
+
+.status-badge.danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: #c42d2d;
 }
 
 @media (max-width: 900px) {

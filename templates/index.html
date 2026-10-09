@@ -1,36 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Northstar Dashboard</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="dashboard-shell">
-      <header class="topbar">
-        <div class="brand">
-          <div class="brand-mark">N</div>
-          <div class="brand-copy">
-            <span class="brand-name">Northstar</span>
-            <small>Operations</small>
-          </div>
-        </div>
-
-        <nav class="nav" aria-label="Main navigation">
-          <a href="#" class="active">Overview</a>
-          <a href="#">Projects</a>
-          <a href="#">Clients</a>
-          <a href="#">Reports</a>
-        </nav>
-
-        <div class="topbar-actions">
-          <button class="ghost-btn">Messages</button>
-          <button class="primary-btn">New report</button>
-        </div>
-      </header>
-
-      <main class="main-grid">
+{% extends "base.html" %}
+{% block content %}
         <section class="hero-panel">
           <div class="panel-header">
             <div>
@@ -43,19 +12,24 @@
           <div class="stats-row">
             <article class="stat-card accent">
               <span class="label">Revenue</span>
-              <strong>$84.2K</strong>
-              <small>vs $72.1K last month</small>
+              <strong>${{ revenue }}K</strong>
+              {% if revenue > 1000 %}
+                <span style="color: green;">Great revenue growth</span>
+              {% else %}
+                <span style="color: red;">Poor revenue growth</span>
+              {% endif %}
+              <!-- <small>vs $72.1K last month</small> -->
             </article>
 
             <article class="stat-card">
               <span class="label">Active clients</span>
-              <strong>248</strong>
+              <strong>{{ active_users }}</strong>
               <small>+18 new this week</small>
             </article>
 
             <article class="stat-card">
               <span class="label">Conversion rate</span>
-              <strong>6.8%</strong>
+              <strong>{{ conversion_rate*100}}%</strong>
               <small>+1.2% improvement</small>
             </article>
           </div>
@@ -160,7 +134,36 @@
             </div>
           </div>
         </section>
-      </main>
-    </div>
-  </body>
-</html>
+
+        <section class="product-panel">
+          <div class="section-title">
+            <h2>Product list</h2>
+            <a href="#">View inventory</a>
+          </div>
+
+          <div class="table-wrap">
+            <table class="product-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Category</th>
+                  <th>Stock</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for product in products %}
+                <tr>
+                  <td>{{product.name}}</td>
+                  <td>{{product.category}}</td>
+                  <td>{{product.stock}}</td>
+                  <td>${{product.price}}</td>
+                  <td><span class="status-badge success">{{product.status}}</span></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+     {% endblock %}
