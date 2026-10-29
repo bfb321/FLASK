@@ -500,3 +500,212 @@ h1 {
     text-align: left;
   }
 }
+
+/* Forms */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+}
+
+.form-grid label {
+  display: grid;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.form-grid .full {
+  grid-column: 1 / -1;
+}
+
+.form-grid input,
+.form-grid textarea {
+  font: inherit;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel-alt);
+  color: var(--text);
+}
+
+.form-grid input:focus,
+.form-grid textarea:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+}
+
+.form-grid button {
+  border: 0;
+  border-radius: 12px;
+  padding: 12px 22px;
+  cursor: pointer;
+}
+
+.alert {
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.alert.error {
+  background: rgba(229, 72, 77, 0.1);
+  color: #b4232a;
+}
+
+.alert.success {
+  background: rgba(46, 197, 163, 0.12);
+  color: #137a62;
+}
+
+@media (max-width: 700px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== Class 5: database-backed pages ===== */
+
+/* Topbar buttons are links now */
+a.ghost-btn,
+a.primary-btn {
+  display: inline-block;
+  border-radius: 12px;
+  padding: 11px 18px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* Flash messages (flash('...', 'success') / flash('...', 'error')) */
+.flash-stack {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 18px;
+}
+
+.flash {
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+
+.flash.success {
+  background: rgba(46, 197, 163, 0.12);
+  color: #137a62;
+}
+
+.flash.error {
+  background: rgba(229, 72, 77, 0.1);
+  color: #b4232a;
+}
+
+.status-pill.down {
+  background: rgba(239, 68, 68, 0.12);
+  color: #c42d2d;
+}
+
+.dot.red { background: #ef4444; }
+
+.muted { color: var(--muted); }
+.small { font-size: 0.85rem; }
+
+/* Select boxes match the inputs */
+.form-grid select,
+.filter-bar input,
+.filter-bar select {
+  font: inherit;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel-alt);
+  color: var(--text);
+}
+
+.form-grid.three {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* Search / filter row above tables */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.filter-bar input[type="search"] {
+  flex: 1 1 220px;
+}
+
+.filter-bar label {
+  display: grid;
+  gap: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+/* Numbers line up on the right */
+.product-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.row-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  white-space: nowrap;
+}
+
+.row-actions form {
+  margin: 0;
+}
+
+.text-link {
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.link-btn {
+  background: none;
+  padding: 0;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.link-btn.danger {
+  color: #c42d2d;
+}
+
+.status-badge.muted {
+  background: rgba(104, 117, 143, 0.12);
+  color: var(--muted);
+}
+
+tr.inactive td {
+  color: var(--muted);
+}
+
+/* ABC tiers */
+.tier {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.tier-a { background: rgba(69, 99, 235, 0.14); color: var(--primary-dark); }
+.tier-b { background: rgba(255, 182, 72, 0.18); color: #b7791f; }
+.tier-c { background: rgba(104, 117, 143, 0.14); color: var(--muted); }
+
+@media (max-width: 700px) {
+  .form-grid.three {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,144 +1,115 @@
 {% extends "base.html" %}
+{% block title %}Overview{% endblock %}
 {% block content %}
         <section class="hero-panel">
           <div class="panel-header">
             <div>
-              <p class="eyebrow">Performance overview</p>
-              <h1>Welcome back, Alex</h1>
+              <p class="eyebrow">Performance overview · last 30 days</p>
+              <h1>Inventory dashboard</h1>
             </div>
-            <span class="status-pill">+12.4% this month</span>
+            {% if stats.growth is none %}
+              <span class="status-pill">No sales in the 30 days before</span>
+            {% elif stats.growth >= 0 %}
+              <span class="status-pill">+{{ '%.1f'|format(stats.growth) }}% vs previous 30 days</span>
+            {% else %}
+              <span class="status-pill down">{{ '%.1f'|format(stats.growth) }}% vs previous 30 days</span>
+            {% endif %}
           </div>
 
           <div class="stats-row">
             <article class="stat-card accent">
               <span class="label">Revenue</span>
-              <strong>${{ revenue }}K</strong>
-              {% if revenue > 1000 %}
-                <span style="color: green;">Great revenue growth</span>
-              {% else %}
-                <span style="color: red;">Poor revenue growth</span>
-              {% endif %}
-              <!-- <small>vs $72.1K last month</small> -->
+              <strong>R{{ '{:,.0f}'.format(stats.revenue) }}</strong>
+              <small>vs R{{ '{:,.0f}'.format(stats.previous_revenue) }} the 30 days before</small>
             </article>
 
             <article class="stat-card">
               <span class="label">Active clients</span>
-              <strong>{{ active_users }}</strong>
-              <small>+18 new this week</small>
+              <strong>{{ stats.active_clients }}</strong>
+              <small>{{ stats.buying_clients }} ordered in the last 30 days</small>
             </article>
 
             <article class="stat-card">
               <span class="label">Conversion rate</span>
-              <strong>{{ conversion_rate*100}}%</strong>
-              <small>+1.2% improvement</small>
+              <strong>{{ '%.0f'|format(stats.conversion_rate * 100) }}%</strong>
+              <small>of active clients placed an order</small>
             </article>
           </div>
         </section>
 
         <aside class="side-panel">
           <div class="mini-card">
-            <p>Services</p>
-            <h3>3 active</h3>
+            <p>Products</p>
+            <h3>{{ stats.product_count }}</h3>
+            <small class="muted">{{ stats.orders_30 }} orders in the last 30 days</small>
           </div>
 
           <div class="mini-card">
-            <p>Team workload</p>
+            <p>Restock alerts</p>
+            <h3>{{ stats.restock|length }}</h3>
+            {% set healthy = stats.product_count - stats.restock|length %}
             <div class="progress">
-              <span class="progress-bar"></span>
+              <span class="progress-bar" style="width: {{ (healthy / stats.product_count * 100)|round|int if stats.product_count else 0 }}%"></span>
             </div>
-            <strong>76%</strong>
+            <small class="muted">{{ healthy }} of {{ stats.product_count }} products above reorder level</small>
           </div>
         </aside>
 
         <section class="content-panel">
           <div class="section-title">
-            <h2>Service delivery</h2>
-            <a href="#">View all</a>
+            <h2>Restock alerts</h2>
+            <a href="{{ url_for('products') }}">View all</a>
           </div>
 
           <div class="service-list">
+            {% for p in stats.restock %}
             <article class="service-item">
               <div class="service-meta">
-                <span class="dot blue"></span>
+                <span class="dot red"></span>
                 <div>
-                  <h3>Website Design</h3>
-                  <p>UI/UX refresh</p>
+                  <h3>{{ p.name }}</h3>
+                  <p>{{ p.category }} · reorder level {{ p.reorder_level }}</p>
                 </div>
               </div>
               <div class="service-info">
-                <strong>72%</strong>
-                <span>On track</span>
+                <strong>{{ p.stock }} left</strong>
+                <span>{{ p.status }}</span>
               </div>
             </article>
-
-            <article class="service-item">
-              <div class="service-meta">
-                <span class="dot purple"></span>
-                <div>
-                  <h3>Brand Strategy</h3>
-                  <p>Campaign planning</p>
-                </div>
-              </div>
-              <div class="service-info">
-                <strong>86%</strong>
-                <span>Healthy</span>
-              </div>
-            </article>
-
+            {% else %}
             <article class="service-item">
               <div class="service-meta">
                 <span class="dot green"></span>
                 <div>
-                  <h3>Automation</h3>
-                  <p>CRM configuration</p>
+                  <h3>All stock is healthy</h3>
+                  <p>No product is at or below its reorder level.</p>
                 </div>
               </div>
-              <div class="service-info">
-                <strong>61%</strong>
-                <span>In review</span>
-              </div>
             </article>
+            {% endfor %}
           </div>
         </section>
 
         <section class="chart-panel">
           <div class="section-title">
-            <h2>Monthly growth</h2>
-            <a href="#">Compare</a>
+            <h2>Monthly revenue</h2>
+            <a href="{{ url_for('reports') }}">Reports</a>
           </div>
 
-          <div class="chart-bars" aria-label="Monthly performance chart">
-            <div class="bar-group">
-              <span class="bar bar-1" style="height: 42%"></span>
-              <label>Jan</label>
+          <div class="chart-bars" aria-label="Monthly revenue chart">
+            {% for m in months %}
+            <div class="bar-group" title="{{ m.ym }}: R{{ '{:,.0f}'.format(m.revenue) }}">
+              <span class="bar bar-{{ loop.index }}" style="height: {{ m.height }}%"></span>
+              <label>{{ m.label }}</label>
             </div>
-            <div class="bar-group">
-              <span class="bar bar-2" style="height: 58%"></span>
-              <label>Feb</label>
-            </div>
-            <div class="bar-group">
-              <span class="bar bar-3" style="height: 50%"></span>
-              <label>Mar</label>
-            </div>
-            <div class="bar-group">
-              <span class="bar bar-4" style="height: 72%"></span>
-              <label>Apr</label>
-            </div>
-            <div class="bar-group">
-              <span class="bar bar-5" style="height: 81%"></span>
-              <label>May</label>
-            </div>
-            <div class="bar-group">
-              <span class="bar bar-6" style="height: 94%"></span>
-              <label>Jun</label>
-            </div>
+            {% endfor %}
           </div>
         </section>
 
         <section class="product-panel">
           <div class="section-title">
             <h2>Product list</h2>
-            <a href="#">View inventory</a>
+            <a href="{{ url_for('products') }}">View inventory</a>
           </div>
 
           <div class="table-wrap">
@@ -153,17 +124,17 @@
                 </tr>
               </thead>
               <tbody>
-                {% for product in products %}
+                {% for product in stats.products %}
                 <tr>
-                  <td>{{product.name}}</td>
-                  <td>{{product.category}}</td>
-                  <td>{{product.stock}}</td>
-                  <td>${{product.price}}</td>
-                  <td><span class="status-badge success">{{product.status}}</span></td>
+                  <td>{{ product.name }}</td>
+                  <td>{{ product.category }}</td>
+                  <td>{{ product.stock }}</td>
+                  <td>R{{ '{:,.2f}'.format(product.price) }}</td>
+                  <td><span class="status-badge {{ product.badge }}">{{ product.status }}</span></td>
                 </tr>
                 {% endfor %}
               </tbody>
             </table>
           </div>
         </section>
-     {% endblock %}
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Orders{% endblock %}
+{% block content %}
+        <section class="product-panel">
+          <div class="section-title">
+            <h2>Place an order</h2>
+          </div>
+          <form method="post" action="{{ url_for('orders') }}" class="form-grid three">
+            <label>Client
+              <select name="client_id" required>
+                <option value="">Choose a client…</option>
+                {% for c in clients %}
+                <option value="{{ c.id }}">{{ c.name }}{{ ' · ' ~ c.company if c.company }}</option>
+                {% endfor %}
+              </select>
+            </label>
+            <label>Product
+              <select name="product_id" required>
+                <option value="">Choose a product…</option>
+                {% for p in products %}
+                <option value="{{ p.id }}" {{ 'disabled' if p.stock == 0 }}>
+                  {{ p.name }} — R{{ '{:,.2f}'.format(p.price) }} ({{ p.stock }} in stock)
+                </option>
+                {% endfor %}
+              </select>
+            </label>
+            <label>Quantity
+              <input type="number" name="quantity" min="1" step="1" value="1" required />
+            </label>
+            <div class="full">
+              <button class="primary-btn">Place order</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="product-panel">
+          <div class="section-title">
+            <h2>Recent orders</h2>
+          </div>
+          <div class="table-wrap">
+            <table class="product-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Date</th>
+                  <th>Client</th>
+                  <th>Product</th>
+                  <th class="num">Qty</th>
+                  <th class="num">Unit price</th>
+                  <th class="num">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for o in orders %}
+                <tr>
+                  <td>{{ o.id }}</td>
+                  <td>{{ o.ordered_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                  <td>{{ o.client }}</td>
+                  <td>{{ o.product }}</td>
+                  <td class="num">{{ o.quantity }}</td>
+                  <td class="num">R{{ '{:,.2f}'.format(o.unit_price) }}</td>
+                  <td class="num"><strong>R{{ '{:,.2f}'.format(o.total) }}</strong></td>
+                </tr>
+                {% else %}
+                <tr><td colspan="7">No orders yet.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+{% endblock %}

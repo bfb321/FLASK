@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Clients{% endblock %}
+{% block content %}
+        <section class="product-panel">
+          <div class="section-title">
+            <h2>Add a client</h2>
+          </div>
+          <form method="post" action="{{ url_for('clients') }}" class="form-grid three">
+            <label>Name
+              <input type="text" name="name" maxlength="120" required />
+            </label>
+            <label>Email
+              <input type="email" name="email" maxlength="160" required />
+            </label>
+            <label>Company <span class="muted">(optional)</span>
+              <input type="text" name="company" maxlength="160" />
+            </label>
+            <div class="full">
+              <button class="primary-btn">Add client</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="product-panel">
+          <div class="section-title">
+            <h2>Clients</h2>
+          </div>
+          <div class="table-wrap">
+            <table class="product-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Company</th>
+                  <th class="num">Orders</th>
+                  <th class="num">Total spent</th>
+                  <th>Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for c in clients %}
+                <tr class="{{ '' if c.active else 'inactive' }}">
+                  <td>{{ c.name }}</td>
+                  <td>{{ c.email }}</td>
+                  <td>{{ c.company or '—' }}</td>
+                  <td class="num">{{ c.order_count }}</td>
+                  <td class="num">R{{ '{:,.2f}'.format(c.total_spent) }}</td>
+                  <td>
+                    <span class="status-badge {{ 'success' if c.active else 'muted' }}">{{ 'Active' if c.active else 'Inactive' }}</span>
+                  </td>
+                  <td class="row-actions">
+                    <form method="post" action="{{ url_for('client_toggle', client_id=c.id) }}">
+                      <button class="link-btn">{{ 'Deactivate' if c.active else 'Activate' }}</button>
+                    </form>
+                  </td>
+                </tr>
+                {% else %}
+                <tr><td colspan="7">No clients yet.</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </section>
+{% endblock %}
